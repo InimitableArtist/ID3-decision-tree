@@ -14,12 +14,8 @@ def read_data(filename):
 
     return [header, lines]
 
-def clean_data(lines):
+def get_goals(lines):
     goals = set([line[-1] for line in lines])
     return goals
 
 
-
-data = read_data(r'lab3_files[8]\datasets\volleyball.csv')
-
-print(clean_data(data[1]))
