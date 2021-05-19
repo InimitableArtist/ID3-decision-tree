@@ -11,3 +11,9 @@ class ID3:
     def predict(self, data):
         pass
     
+
+def main():
+    print('Main...')
+
+if __name__ == '__main__':
+    main()
