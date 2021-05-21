@@ -18,4 +18,11 @@ def get_goals(lines):
     goals = set([line[-1] for line in lines])
     return goals
 
+def get_attribute_values(header, lines):
+    attributeValues = {}
+    
+    for i in range(len(header) - 1):
+        attributes = [j[i] for j in lines]
+        attributeValues[header[i]] = set(attributes)
 
+    return attributeValues
