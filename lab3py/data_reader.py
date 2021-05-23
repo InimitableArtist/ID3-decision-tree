@@ -1,28 +1,49 @@
 import csv
 
 def read_data(filename):
+    data = dict()
     with open(filename) as csvFile:
         csvReader = csv.reader(csvFile, delimiter = ',')
         lineCount = 0
-        lines = []
         for row in csvReader:
             if lineCount == 0:
                 header = row
                 lineCount +=1
+                for i in range(len(header)):
+                    data[header[i]] = []
             else:
-                lines.append(row)
+                for i in range(len(header)):
+                    data[header[i]].append(row[i])
+                
 
-    return [header, lines]
+    return data
 
-def get_goals(lines):
-    goals = set([line[-1] for line in lines])
+def read_test_data(filename):
+    data = list()
+    with open(filename) as csvFile:
+        csvReader = csv.reader(csvFile, delimiter = ',')
+        lineCount = 0
+        for row in csvReader:
+            row = row[:-1]
+            if lineCount == 0:
+                header = row
+                lineCount += 1
+            else:
+                current = {}
+                for i in range(len(header)):
+                    current[header[i]] = row[i]
+                data.append(current) 
+    return data
+            
+
+def get_goals(data):
+    goals = set(data[list(data.keys())[-1]])
     return goals
 
-def get_attribute_values(header, lines):
+def get_attribute_values(data):
     attributeValues = {}
-    
-    for i in range(len(header) - 1):
-        attributes = [j[i] for j in lines]
-        attributeValues[header[i]] = set(attributes)
+    attributeNames = list(data.keys())
+    for i in attributeNames:
+        attributeValues[i] = set(data[i])
 
     return attributeValues
