@@ -24,6 +24,7 @@ class ID3:
         self.print_branches(branches)
         self.predicted = self.test(self.testData, stablo)
         self.matrica_zabune()
+        print('stablo: ', stablo)
 
         
     def uniq(self, lista):
@@ -44,17 +45,25 @@ class ID3:
 
     def fit(self, data, originalData, znacajke, imeCilja, parentNode = None, depth = 0):
 
+
+        #Ako sve ciljne varijable imaju istu vrijednost, vrati cilj.
         if len(self.uniq((data[imeCilja]))[0]) <= 1:
+            print('data: ', data)
             return list(set(data[imeCilja]))[0]
+
             
         elif len(data) == 0:
             return self.uniq(originalData[imeCilja])[self.max_index(self.uniq(originalData[imeCilja])[1])]
 
+        
         elif len(znacajke) == 0:
             return parentNode
 
+        #Ako ništa nije do sada True, gradi stablo.
         else:
             b = sorted(self.uniq(originalData[imeCilja])[0])
+
+            #Postavlja defaultnu vrijednost na najčešću za trenutni čvor
             parentNode = b[self.max_index(self.uniq(data[imeCilja])[1])]
             
             itemValues = [self.info_gain(data, znacajka) for znacajka in znacajke]
@@ -72,12 +81,15 @@ class ID3:
 
             stablo = {maxZnacajka : {}}
 
+            #Makni znacajke sa najboljim info gainom.
             znacajke = [i for i in znacajke if i != maxZnacajka]
+            
 
+            #Gradi stablo za svaku od mogucih vrijednost max znacajke
             for j in self.uniq(data[maxZnacajka])[0]:
                 subData = self.get_sub_tree(data, maxZnacajka, j)
 
-                
+                #Rekurzivno pozovi metodu za svaku od dobivenih subDatasetova.
                 subTree = self.fit(subData, originalData, znacajke, self.goalName, parentNode, depth + 1)
                 stablo[maxZnacajka][j] = subTree
 
@@ -86,22 +98,22 @@ class ID3:
 
             return stablo
 
-    def get_sub_tree(self, data, node, v):
+    def get_sub_tree(self, data, maxZnacajka, vrijednostZnacajke):
 
         indeksi = []
         nData = {}
         for key, vals in data.items():
-            if (key == node):
+            if (key == maxZnacajka):
                 for i in range(len(vals)):
-                    if (vals[i] == v):
+                    if (vals[i] == vrijednostZnacajke):
                         indeksi.append(i)
         
         for znacajka in data.keys():
-            if (znacajka != node):
+            if (znacajka != maxZnacajka):
                 nData[znacajka] = []
 
         for key, vals in data.items():
-            if (key != node):
+            if (key != maxZnacajka):
                 for i in range(len(vals)):
                     if i in indeksi:
                         nData[key].append(vals[i])
@@ -133,6 +145,7 @@ class ID3:
                     return default
 
                 result = stablo[key][testData[key]]
+                print('key: ', key, '| result: ', result)
 
                 if isinstance(result, dict):
                     return self.predict(testData, result)
