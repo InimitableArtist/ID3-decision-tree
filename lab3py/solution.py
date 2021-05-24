@@ -24,7 +24,7 @@ class ID3:
         self.print_branches(branches)
         self.predicted = self.test(self.testData, stablo)
         self.matrica_zabune()
-        print('stablo: ', stablo)
+        
 
         
     def uniq(self, lista):
@@ -48,7 +48,6 @@ class ID3:
 
         #Ako sve ciljne varijable imaju istu vrijednost, vrati cilj.
         if len(self.uniq((data[imeCilja]))[0]) <= 1:
-            print('data: ', data)
             return list(set(data[imeCilja]))[0]
 
             
@@ -145,7 +144,6 @@ class ID3:
                     return default
 
                 result = stablo[key][testData[key]]
-                print('key: ', key, '| result: ', result)
 
                 if isinstance(result, dict):
                     return self.predict(testData, result)
